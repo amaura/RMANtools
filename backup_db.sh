@@ -145,7 +145,8 @@ CROSSCHECK BACKUP;
 "
 fi
 
-echo "$RMAN_SCRIPT"
+#Debug
+#echo "$RMAN_SCRIPT"
 }
 
 run_rman_script()
