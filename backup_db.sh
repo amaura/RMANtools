@@ -47,7 +47,7 @@ RETENTION="RECOVERY WINDOW OF 1 DAYS"
 
 usage() { echo "Usage: $0 -d <DB_UNIQUE_NAME> -l <0|1|f|al> [-p <parallelism> [-t <DISK|SBT_TAPE>]" 1>&2; exit 1; }
 
-while getopts ":d:c:l:t:p:" o; do
+while getopts ":d:l:t:p:" o; do
     case "${o}" in
         d)
             DB_UNIQUE_NAME=${OPTARG}
