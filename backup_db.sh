@@ -2,13 +2,15 @@
 #
 # Description : RMAN backup on Exadata
 # Author : Amaury FRANCOIS <amaury.francois@oracle.com>
-#
+# Cron : 
+# 0 22 * * * /u01/app/oracle/backup/backup_db.sh -d <DB_GLOBAL_NAME> -l f -p 4 -t DISK > /dev/null 2>&1
+
 #
 set -x
 #######################
 ## Default parameters##
 #######################
-ORACLE_HOME=/u01/app/oracle/product/12.1.0.2/dbhome_1
+export ORACLE_HOME=/u01/app/oracle/product/12.1.0.2/dbhome_1
 LOG_DIR=/u01/app/oracle/backup/logs
 
 #Scan address
