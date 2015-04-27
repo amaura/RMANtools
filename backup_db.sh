@@ -4,7 +4,7 @@
 # Author : Amaury FRANCOIS <amaury.francois@oracle.com>
 #
 #
-set -x
+#set -x
 #######################
 ## Default parameters##
 #######################
