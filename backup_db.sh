@@ -4,12 +4,12 @@
 # Author : Amaury FRANCOIS <amaury.francois@oracle.com>
 #
 #
-#set -x
+set -x
 #######################
 ## Default parameters##
 #######################
 ORACLE_HOME=/u01/app/oracle/product/12.1.0.2/dbhome_1
-LOG_DIR=/home/oracle/amaury
+LOG_DIR=/u01/app/oracle/backup/logs
 
 #Scan address
 SCAN_ADDR=ed02-scan
@@ -45,12 +45,12 @@ RETENTION="RECOVERY WINDOW OF 1 DAYS"
 #End of Default parameters#
 ###########################
 
-usage() { echo "Usage: $0 -d <DB_UNIQUE_NAME> -l <0|1|f|al> [-p <parallelism> [-t <DISK|SBT_TAPE>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 -d <DB_UNIQUE_NAME>.<Domain Name> -l <0|1|f|al> [-p <parallelism> [-t <DISK|SBT_TAPE>]" 1>&2; exit 1; }
 
 while getopts ":d:l:t:p:" o; do
     case "${o}" in
         d)
-            DB_UNIQUE_NAME=${OPTARG}
+            DB_GLOBAL_NAME=${OPTARG}
             ;;
         p)
             PARALLEL=${OPTARG}
@@ -67,16 +67,16 @@ while getopts ":d:l:t:p:" o; do
     esac
 done
 
-if [ -z "${DB_UNIQUE_NAME}" ] || [ -z "${LEVEL}" ]; then
+if [ -z "${DB_GLOBAL_NAME}" ] || [ -z "${LEVEL}" ]; then
     usage
 fi
 
 
 # Build Variables
-RMAN_CMD="$ORACLE_HOME/bin/rman target sys/$DB_PASSWD@$SCAN_ADDR/$DB_UNIQUE_NAME"
+RMAN_CMD="$ORACLE_HOME/bin/rman target sys/$DB_PASSWD@$SCAN_ADDR/$DB_GLOBAL_NAME"
 mkdir -p ${LOG_DIR}/${DB_UNIQUE_NAME}
 RMAN_LOG=${LOG_DIR}/${DB_UNIQUE_NAME}/rman_${LEVEL}_${DEV_TYPE}_$(date +%Y%m%d-%H:%M:%S).log
-
+DB_UNIQUE_NAME=$(echo ${DB_GLOBAL_NAME} | cut -d '.' -f 1)
 
 #Save Current Rman config
 save_rman_config()
@@ -144,7 +144,6 @@ RMAN_SCRIPT="$RMAN_SCRIPT
 CROSSCHECK BACKUP;
 "
 fi
-
 #Debug
 #echo "$RMAN_SCRIPT"
 }
