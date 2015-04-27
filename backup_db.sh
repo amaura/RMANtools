@@ -4,7 +4,7 @@
 # Author : Amaury FRANCOIS <amaury.francois@oracle.com>
 #
 #
-#set -x
+set -x
 #######################
 ## Default parameters##
 #######################
@@ -74,8 +74,8 @@ fi
 
 # Build Variables
 RMAN_CMD="$ORACLE_HOME/bin/rman target sys/$DB_PASSWD@$SCAN_ADDR/$DB_GLOBAL_NAME"
-mkdir -p ${LOG_DIR}/${DB_UNIQUE_NAME}
-RMAN_LOG=${LOG_DIR}/${DB_UNIQUE_NAME}/rman_${LEVEL}_${DEV_TYPE}_$(date +%Y%m%d-%H:%M:%S).log
+mkdir -p ${LOG_DIR}/${DB_GLOBAL_NAME}
+RMAN_LOG=${LOG_DIR}/${DB_GLOBAL_NAME}/rman_${LEVEL}_${DEV_TYPE}_$(date +%Y%m%d-%H:%M:%S).log
 DB_UNIQUE_NAME=$(echo ${DB_GLOBAL_NAME} | cut -d '.' -f 1)
 
 #Save Current Rman config
