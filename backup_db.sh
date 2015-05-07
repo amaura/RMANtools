@@ -2,9 +2,7 @@
 #
 # Description : RMAN backup on Exadata
 # Author : Amaury FRANCOIS <amaury.francois@oracle.com>
-# Cron : 
-# 0 22 * * * /u01/app/oracle/backup/backup_db.sh -d <DB_GLOBAL_NAME> -l f -p 4 -t DISK > /dev/null 2>&1
-
+#
 #
 set -x
 #######################
@@ -43,6 +41,8 @@ SECT_SIZE=15G
 #Retention
 RETENTION="RECOVERY WINDOW OF 1 DAYS"
 
+#Log File Retention (in days)
+LOG_RETENTION=7
 ###########################
 #End of Default parameters#
 ###########################
@@ -80,6 +80,11 @@ mkdir -p ${LOG_DIR}/${DB_GLOBAL_NAME}
 RMAN_LOG=${LOG_DIR}/${DB_GLOBAL_NAME}/rman_${LEVEL}_${DEV_TYPE}_$(date +%Y%m%d-%H:%M:%S).log
 DB_UNIQUE_NAME=$(echo ${DB_GLOBAL_NAME} | cut -d '.' -f 1)
 
+
+purge_logs()
+{
+find ${LOG_DIR}/${DB_GLOBAL_NAME} -name "*.log" -mtime +${LOG_RETENTION} | xargs rm -f
+}
 #Save Current Rman config
 save_rman_config()
 {
@@ -158,3 +163,4 @@ echo "$RMAN_SCRIPT" | $RMAN_CMD log=$RMAN_LOG
 build_rman_config
 build_rman_script
 run_rman_script
+purge_logs
